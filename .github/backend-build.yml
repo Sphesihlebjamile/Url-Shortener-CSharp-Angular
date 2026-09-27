@@ -1,0 +1,59 @@
+# The workflow name
+name: Backend Build & Test
+
+# The event that triggers the workflow
+on:
+  - push:
+      branches:
+        - main
+        - develop
+        - feature/**
+  - pull_request:
+      branches:
+        - main
+        - develop
+        - feature/**
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Clones your repository onto the runner
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup dotnet environment
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "10.0.x"
+
+      # Step 3: Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Step 4: Build the project
+      - name: Build the project
+        run: dotnet build --no-restore
+
+  test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    depends-on: build
+
+    steps:
+      # Step 1: Clones your repository onto the runner
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup dotnet environment
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "10.0.x"
+
+      # Step 3: Test the project
+      - name: Test the project
+        run: dotnet test --no-restore
