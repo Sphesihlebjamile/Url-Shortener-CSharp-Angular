@@ -1,4 +1,4 @@
-using Backend.Api.Endpoints;
+using Backend.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +8,8 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddApi();
 
 var app = builder.Build();
 
@@ -21,6 +23,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapDataEndpoints();
+app.UseEndpoints();
 
 app.Run();

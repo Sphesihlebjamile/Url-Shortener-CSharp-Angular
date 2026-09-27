@@ -1,4 +1,7 @@
-﻿using Backend.Contracts.ApiResponseTypes.DataEndpoint;
+﻿using Backend.Contracts.ApiRequestTypes.DataEndpoint;
+using Backend.Contracts.ApiResponseTypes.DataEndpoint;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Api.Endpoints;
 
@@ -21,8 +24,17 @@ public static class DataEndpoints
         return builder;
     }
 
-    public static IResult ShortenUrl()
+    public static IResult ShortenUrl(
+        [FromBody] ApiDataRequest request,
+        IValidator<ApiDataRequest> validator)
     {
+        var validationResult = validator.Validate(request);
+
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.Errors);
+        }
+
         var response = new ApiDataResponse()
         {
             ShortUrl = "Short Url"
