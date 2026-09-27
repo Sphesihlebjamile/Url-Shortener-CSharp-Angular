@@ -15,7 +15,7 @@ on:
         - feature/**
 
 env:
-  SOLUTION_PATH: '.\src\Backend\Backend.slnx'
+  SOLUTION_PATH: './src/Backend/Backend.slnx'
 
 jobs:
   build:
