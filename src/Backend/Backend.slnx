@@ -1,1 +1,12 @@
-<Solution />
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="Backend.Api/Backend.Api.csproj" />
+    <Project Path="Backend.Application/Backend.Application.csproj" />
+    <Project Path="Backend.Contracts/Backend.Contracts.csproj" />
+    <Project Path="Backend.Domain/Backend.Domain.csproj" />
+    <Project Path="Backend.Infrastructure/Backend.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="Backend.Test/Backend.Test.csproj" />
+  </Folder>
+</Solution>

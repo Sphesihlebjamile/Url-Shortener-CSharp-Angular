@@ -12,6 +12,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+appsettings.*.json
 
 ## ----------------------------------------------------------------------
 ## Visual Studio Code (Workspace settings and configurations)
