@@ -14,6 +14,9 @@ on:
         - develop
         - feature/**
 
+env:
+  SOLUTION_PATH: '.\src\Backend\Backend.sln'
+
 jobs:
   build:
     # The type of runner that the job will run on
@@ -32,11 +35,11 @@ jobs:
 
       # Step 3: Restore dependencies
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
 
       # Step 4: Build the project
       - name: Build the project
-        run: dotnet build --no-restore
+        run: dotnet build ${{ env.SOLUTION_PATH }} --no-restore
 
   test:
     # The type of runner that the job will run on
@@ -56,4 +59,4 @@ jobs:
 
       # Step 3: Test the project
       - name: Test the project
-        run: dotnet test --no-restore
+        run: dotnet test ${{ env.SOLUTION_PATH }} --no-restore
