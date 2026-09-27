@@ -3,12 +3,12 @@ name: Backend Build & Test
 
 # The event that triggers the workflow
 on:
-  - push:
+  push:
       branches:
         - main
         - develop
         - feature/**
-  - pull_request:
+  pull_request:
       branches:
         - main
         - develop
@@ -41,7 +41,7 @@ jobs:
   test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    depends-on: build
+    needs: build
 
     steps:
       # Step 1: Clones your repository onto the runner
