@@ -104,3 +104,34 @@ Our url shortener will contain these 3 basic parts:
 - **Client**: This will be a front-end application that will accept a long url as input, and return a short url as output. There are no requirements for authentication, security, or other pages.
 - **API**: The Api will act as our server. It will receive info from our client or brower, process the request, and return a response.
 - **Database**: The database will be used to store the data required for the application to execute on its requirements.
+
+**Module 1 - Front-End**: For the front-end we will only have 2 pages with the following URL:
+
+- `https:\\localhost:5000\`: This is the home page which will require us to insert a long url, to get a short url in exchange.
+- `https:\\localhost:5000\<hashcode>`: This is the short-url page. When it's triggered it will get the long url and do a 301 redirect to it.
+
+When designing the front-end at this point, we will go with utility and functionality over aesthetics and user experience.
+
+**Module 2 - Back-End/Api**: The api will have the following endpoints:
+
+- POST: `/api/v1/data/shorten`
+  - Request parameter: `{longUrl: longUrlString}`
+  - Return paramter: `{shortUrl: shortUrlString}`
+- GET: `/api/v1/shortUrl`
+  - `shortUrl` will be provided as part of the **GET** url
+  - Return parameter: `{longUrl: longUrlString}`, will be used for redirection
+
+This is how the system will work from a high-level.
+
+![High-Level design image](./docs/imgs/high-level-design.png)
+
+For the url shortener to work, we must build the application as follows:
+
+![Hashing-Function process](./docs/imgs/hash-function.png)
+
+The application should receive a long-url, generate a short url which contains a hashcode value, and use that haschode value in the short url (which should obiously map back to the long url).
+
+So the hash function function should satisfy the following requirements:
+
+- Each _long url_ must be hashed as one unique _hashvalue_.
+- Each _hashvalue_ should be mappable back to a long url.
