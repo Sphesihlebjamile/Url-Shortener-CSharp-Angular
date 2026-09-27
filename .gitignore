@@ -1,0 +1,40 @@
+## ----------------------------------------------------------------------
+## .NET / Visual Studio (Build outputs, caches, user-specific settings)
+## ----------------------------------------------------------------------
+[Bb]in/
+[Oo]bj/
+[Ee]xt/
+[Ll]og/
+[Ll]ogs/
+*.binlog
+*.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## ----------------------------------------------------------------------
+## Visual Studio Code (Workspace settings and configurations)
+## ----------------------------------------------------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+## ----------------------------------------------------------------------
+## Testing and Packages (NuGet, MSTest, NUnit)
+## ----------------------------------------------------------------------
+[Tt]est[Rr]esult*/
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+*.nuget.props
+*.nuget.targets
+
+## ----------------------------------------------------------------------
+## OS Specific (Windows / macOS system files)
+## ----------------------------------------------------------------------
+.DS_Store
+Thumbs.db
