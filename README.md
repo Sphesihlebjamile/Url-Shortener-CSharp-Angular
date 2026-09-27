@@ -87,3 +87,20 @@ Basic use cases:
 - URL shortening: given a long URL => return a much shorter URL.
 - URL redirecting: given a shorter URL => redirect to the original URL.
 - High availability, scalability, and fault tolerance considerations.
+
+### Back of the Envelope Estimations
+
+- Write operation: 100 million URLs are generated per day.
+- Write operation per second: 100 million / 24 /3600 = 1160.
+- Read operation: Assuming ratio of read operation to write operation is 10:1, read operation per second: 1160 * 10 = 11,600
+- Assume average URL length is 100.
+
+Storage and project lifecycle estimations will not be calculated or included. In a real life project this is a must as the storage and estimated lifecycle of the project will dictate which cloud provider you will use, which database and database provider you will use, and how the application will be built.
+
+### High-Level Design
+
+Our url shortener will contain these 3 basic parts:
+
+- **Client**: This will be a front-end application that will accept a long url as input, and return a short url as output. There are no requirements for authentication, security, or other pages.
+- **API**: The Api will act as our server. It will receive info from our client or brower, process the request, and return a response.
+- **Database**: The database will be used to store the data required for the application to execute on its requirements.
