@@ -94,8 +94,7 @@ Basic use cases:
 - Write operation per second: 100 million / 24 /3600 = 1160.
 - Read operation: Assuming ratio of read operation to write operation is 10:1, read operation per second: 1160 * 10 = 11,600
 - Assume average URL length is 100.
-
-Storage and project lifecycle estimations will not be calculated or included. In a real life project this is a must as the storage and estimated lifecycle of the project will dictate which cloud provider you will use, which database and database provider you will use, and how the application will be built.
+- Assuming the URL shortener service will run for 10 years, this means we must provide a minimum of `100 million generated urls per day` x `365 days per year` x `10 years` = `365 billion records`.
 
 ### High-Level Design
 
@@ -131,7 +130,93 @@ For the url shortener to work, we must build the application as follows:
 
 The application should receive a long-url, generate a short url which contains a hashcode value, and use that haschode value in the short url (which should obiously map back to the long url).
 
-So the hash function function should satisfy the following requirements:
+So the hash function should satisfy the following requirements:
 
 - Each _long url_ must be hashed as one unique _hashvalue_.
 - Each _hashvalue_ should be mappable back to a long url.
+
+### Design Deep Dive
+
+#### Data Model
+
+We need to store the data in such a way that each `<hash-value>` for the short-url maps to a `<long-url>` that the user will be redirected to.
+In memory, we can use a hashtable datastructure which will allow us to uniquely store each `<hash-value>` as a key, and a `<long-url>` as a value. This provides the added benefit that we can search for our values quickly.
+
+As much as this sounds like a good idea, we do not want to store these values in-memory because it will increase our storage costs and make running our application in the real world expensive.
+For this application, we will use a relational database.
+
+```text
+|         urls         |
+------------------------
+| PK | ids             |
+------------------------
+|    | shorUrlHashcode |
+|    | longUrl         |
+------------------------
+```
+
+#### Hashfunction
+
+The hashfunction will be used to hash a long url into a short url, also known as a `hashValue`.
+
+The `<hashValue>` consistes of these characters: `[a-z, A-Z, 0-9]`, a total of `62` unique characters. To figure out the length of `<hashValue>`, find the smallest `n` such that `62^n ≥ 365 billion`. The system must support up to `365 billion` URLs based on the back of the envelope estimation. The table shows the length of hashValue and the corresponding maximal number of URLs it can support.
+
+| n | Maximal number of URLs                   |
+|---|------------------------------------------|
+| 1 | 62^1 = 62                                |
+| 2 | 62^2 = 3,844                             |
+| 3 | 62^3 = 238,328                           |
+| 4 | 62^ 4 = 14,776,336                       |
+| 5 | 62^5 = 916,132,832                       |
+| 6 | 62^6 = 56,800,235,584                    |
+| 7 | 62^7 = 3,521,614,606,208 = ~3.5 trillion |
+
+From the table above we can see that our `<hashValue>` must have 7 characters, and that will provide the minimum number of unique values within a 10 year period. There a numeroud hash functions that we can use to generate these `<hashValues>`, we will explore **Hash + Collision Resolution** and **Base62 Conversion**.
+
+##### Hash + Collision Resolution
+
+To shorten a long URL, we should implement a hash function that hashes a long URL to a 7-character string. A straightforward solution is to use well-known hash functions like MD5 or SHA-1.
+Let us compare the output of these functions for this Amazon URL:
+
+- `https://www.amazon.co.za/Backpack-Leather-Anti-theft-Shoulder-Waterproof/dp/B0FRSCXSCT/ref=sr_1_13?_encoding=UTF8&content-id=amzn1.sym.70e15c07-22ae-4893-92ca-7fc9918b6c7e&crid=10ERT7KPFWUG1&dib=eyJ2IjoiMSJ9.NFHyH0UreXPi3aqHy0Y6STbfmfjmkmW_jL3CzSdfCLvtv6Tb-tebV4LZfcXT8oJjO-ZsLUHDiTG5fgiowmbV-q6iJfnTQs675QkCbwp8-JE-HBhW2ezJJYO_K2W7dDu8Z_zt3eNGq61GtBJ1BlYwMC6IIZkMnz_eXAi0uqxILYkfuFxGyjLiUynwmAZ0Gr86YZ6kABF7fBg8OltU7TD2gU2gBJeekh_6XxqywevP8LyDl7ZPu0kJXNbqgfWPPUNFzs4OV2rno_IOhp29PNOImoM3uEj8QN2SCuPy52UcFMo.F2XoCNoSYYD_88z9a3m-tEnYSZZNGpvQQiGzUTd1PV4&dib_tag=se&keywords=backpacks&pd_rd_r=2cdab95c-f24e-492d-a864-ddb67a46aad1&pd_rd_w=3o51v&pd_rd_wg=652R8&qid=1790515726&refinements=p_n_deal_type%3A28056833031&rnid=28056811031&sprefix=backpacks%2Caps%2C491&sr=8-13`
+
+| Hash Function | Hash Value                              -|
+|---------------|------------------------------------------|
+| MD5           | b6ece2126e08096128372d574c0e2ffa         |
+| SHA-1         | 027120b83afc83cd68a639c1afd68c17aa3a0f10 |
+
+As you can see in the table above, these results of these hash functions is longer than 7 characters, which is not good for us as it increases storage costs. The next question then is, how can we take these long `<hashValues>` and make them short?
+
+The first approach is to collect these `<hashValues>` and make them shorter by only selecting the first 7 characters. A problem which arises when using this approach is something we can _hash collisions_ (when 2 hashes from different values are the same). We can resolve hash collitions by appending a predefined string to each hash until it is unique, then insert it into the database.
+
+![Hash Collision Resolution](./docs/imgs/hash-collision-hashing-function-problem.png)
+
+The main issue with this process is it requires us to frequently query the database to check if a `<hashValue>` or `<short-url>` already exists.
+
+##### Base62 Conversion
+
+Base conversion is another approach commonly used for URL shorteners. Base conversion helps to convert the same number between its different number representation systems. Base 62 conversion is used as there are 62 possible characters for `<hashValue>`.
+
+Base62 conversion takes a base-10 integer (like a database Id), divides it repeatedly by 62, and maps the remainders to the 62-character alphabet. Let's look at the example below:
+
+If we want to map the number `11157` to base 64 we will do the following:
+
+- 11157 / 62 = 179 rem 59
+- 179 / 62 = 2 rem 55
+- 2 / 62 = 0 rem 2
+
+We will then read these numbers in reverse as `[2, 55, 59]`, giving us the unique `<hashValue>` of `2TX`.
+The shortUrl then becomes: `https://localhost:5000/2TX`.
+
+> For this project we will use the Base62 converter. We will use the simplest possible solution to get our MVP up and running.
+
+#### Url Shortening Process
+
+![Short-Url Steps](./docs/imgs/bas54-shorturl-converter.png)
+
+In a real world application we will require there to be a globally distributed unique ID generator which can generate a unique ID for each and every long-url that is required to be saved into the database.
+
+## Project References
+
+- [How does a URL shortener work?](https://www.youtube.com/watch?v=HHUi8F_qAXM&t=97s)
+- [Design a url shortener](https://bytebytego.com/courses/system-design-interview/design-a-url-shortener)
