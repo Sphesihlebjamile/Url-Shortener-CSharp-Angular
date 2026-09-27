@@ -67,4 +67,6 @@ There are times when a 302 redirect is useful. Add a 302 redirect for:
 
 302 are temporary redirects and used when webmasters need to assess performance or gather feedback. They are not to be used as a permanent solution.
 
-For our use case we will make use of **301 redirects** as for a provided URL we will require a permanent redirect to the destination long-url. This will also allow us to make use of browser caching so the same user will not hit our server multiple times for the same short URL.
+Each redirection method has its pros and cons. If the priority is to reduce the server load, using 301 redirect makes sense as only the first request of the same URL is sent to URL shortening servers. However, if analytics is important, 302 redirect is a better choice as it can track click rate and source of the click more easily.
+
+For our use case we will make use of **301 redirects** as for a provided URL we will require a permanent redirect to the destination long-url, and the MVC application will not include any tracking or analytics. This will also allow us to make use of browser caching so the same user will not hit our server multiple times for the same short URL.
