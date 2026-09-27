@@ -1,4 +1,5 @@
-﻿using Backend.Contracts.ApiRequestTypes.DataEndpoint;
+﻿using Backend.Application.Orchestrators;
+using Backend.Contracts.ApiRequestTypes.DataEndpoint;
 using Backend.Contracts.ApiResponseTypes.DataEndpoint;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -24,10 +25,12 @@ public static class DataEndpoints
         return builder;
     }
 
-    public static IResult ShortenUrl(
+    public static async Task<IResult> ShortenUrl(
         [FromBody] ApiDataRequest request,
-        IValidator<ApiDataRequest> validator)
+        IValidator<ApiDataRequest> validator,
+        IUrlShortenerOrchestrator orchestrator)
     {
+        // Validate request object
         var validationResult = validator.Validate(request);
 
         if (!validationResult.IsValid)
@@ -35,10 +38,17 @@ public static class DataEndpoints
             return Results.BadRequest(validationResult.Errors);
         }
 
+        // call orchestrator to execute on the url shortening
+        var input = new UrlShortenerInput(request.LongUrl!);
+        var orchResult = await orchestrator.ExecuteAsync(input);
+
+        // map output to response object
         var response = new ApiDataResponse()
         {
-            ShortUrl = "Short Url"
+            ShortUrl = orchResult.ShortUrl
         };
+
+        // return response
         return Results.Created("/data/shorten", response);
     }
 }
