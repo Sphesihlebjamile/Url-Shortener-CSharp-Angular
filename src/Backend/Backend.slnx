@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/files/">
+    <File Path="../../.github/workflows/backend-build.yml" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="Backend.Api/Backend.Api.csproj" />
     <Project Path="Backend.Application/Backend.Application.csproj" />
