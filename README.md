@@ -70,3 +70,20 @@ There are times when a 302 redirect is useful. Add a 302 redirect for:
 Each redirection method has its pros and cons. If the priority is to reduce the server load, using 301 redirect makes sense as only the first request of the same URL is sent to URL shortening servers. However, if analytics is important, 302 redirect is a better choice as it can track click rate and source of the click more easily.
 
 For our use case we will make use of **301 redirects** as for a provided URL we will require a permanent redirect to the destination long-url, and the MVC application will not include any tracking or analytics. This will also allow us to make use of browser caching so the same user will not hit our server multiple times for the same short URL.
+
+## Our Url-Shortener Design/Architecture and Requirements
+
+### Purpose & Requirements
+
+Design and build a url-shortener that can take a long url and give me a short url that is easier to read and share with other people. No tracking or analytics are required for this url-shortener.
+The url-shortener needs to ultimately be able to support the generation of approximately `100 million` short urls per day.
+
+- There are no specific requirements on how short a url should be, but we should make it as short as possible.
+- The shortened url can contain the following characters: (a-z), (A-Z), and (0-9). No special characters are allowed.
+- For simplicity, let us assume shortened URLs cannot be deleted or updated.
+
+Basic use cases:
+
+- URL shortening: given a long URL => return a much shorter URL.
+- URL redirecting: given a shorter URL => redirect to the original URL.
+- High availability, scalability, and fault tolerance considerations.
