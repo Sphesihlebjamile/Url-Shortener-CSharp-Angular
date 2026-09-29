@@ -1,34 +1,55 @@
 ﻿using Backend.Api.Validation.DataEndpoints;
 using Backend.Application.Orchestrators;
+using Backend.Application.Persistence;
 using Backend.Application.Plans;
 using Backend.Infrastructure.Orchestrators;
+using Backend.Infrastructure.Persistence;
 using Backend.Infrastructure.Plans;
 using FluentValidation;
 
 namespace Backend.Api.Configuration;
 
-public static class ServiceCollectionRegistration
+internal static class ServiceCollectionRegistration
 {
-    public static IServiceCollection AddApi(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        services.AddValidation();
-        services.AddApplication();
+        internal IServiceCollection AddApi()
+        {
+            services.AddValidation();
+            services.AddApplication();
 
-        return services;
-    }
+            return services;
+        }
 
-    public static IServiceCollection AddValidation(this IServiceCollection services)
-    {
-        services.AddValidatorsFromAssemblyContaining<ApiDataRequestValidator>();
+        internal IServiceCollection AddValidation()
+        {
+            services.AddValidatorsFromAssemblyContaining<ApiDataRequestValidator>();
 
-        return services;
-    }
+            return services;
+        }
 
-    public static IServiceCollection AddApplication(this IServiceCollection services)
-    {
-        services.AddScoped(typeof(IUrlShortenerOrchestrator), typeof(UrlShortenerOrchestrator));
-        services.AddScoped(typeof(IUrlShortenerPlan), typeof(UrlShortenerPlan));
+        internal IServiceCollection AddApplication()
+        {
+            services.AddScoped(typeof(IUrlShortenerOrchestrator), typeof(UrlShortenerOrchestrator));
+            services.AddScoped(typeof(IUrlShortenerPlan), typeof(UrlShortenerPlan));
 
-        return services;
+            return services;
+        }
+
+        internal IServiceCollection AddDomainServices(IConfiguration configuration)
+        {
+            var urlShortenerConnectionString = configuration.GetConnectionString(
+                UrlShortenerDb.ConnectionStringName);
+
+            if (string.IsNullOrWhiteSpace(urlShortenerConnectionString))
+            {
+                throw new InvalidOperationException(
+                    $"ConnectionString: {UrlShortenerDb.ConnectionStringName} is required to register the UrlShortener database.");
+            }
+
+            services.AddScoped<IUrlShortenerDb>(_ => new UrlShortenerDb(urlShortenerConnectionString));
+
+            return services;
+        }
     }
 }

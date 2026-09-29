@@ -9,7 +9,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddApi();
+builder.Services
+    .AddDomainServices(builder.Configuration)
+    .AddApi();
 
 var app = builder.Build();
 
