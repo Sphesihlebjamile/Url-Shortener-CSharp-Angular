@@ -4,18 +4,19 @@ name: Backend Build & Test
 # The event that triggers the workflow
 on:
   push:
-      branches:
-        - main
-        - develop
-        - feature/**
+    branches:
+      - main
+      - develop
+      - feature/**
   pull_request:
-      branches:
-        - main
-        - develop
-        - feature/**
+    branches:
+      - main
+      - develop
+      - feature/**
 
 env:
-  SOLUTION_PATH: './src/Backend/Backend.slnx'
+  BACKEND_SOLUTION_PATH: "./src/Backend/Backend.slnx"
+  DATABASE_SOLUTION_PATH: "./src/Database/UrlShortener/UrlShortener.slnx"
 
 jobs:
   build:
@@ -35,11 +36,32 @@ jobs:
 
       # Step 3: Restore dependencies
       - name: Restore dependencies
-        run: dotnet restore ${{ env.SOLUTION_PATH }}
+        run: dotnet restore ${{ env.BACKEND_SOLUTION_PATH }}
 
       # Step 4: Build the project
       - name: Build the project
-        run: dotnet build ${{ env.SOLUTION_PATH }} --no-restore
+        run: dotnet build ${{ env.BACKEND_SOLUTION_PATH }} --no-restore
+
+  build_database:
+    # THe type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Clones your repository onto the runner
+      - name: Check out repository code
+        uses: actions/checkout@v6
+
+      # Step 2: Setup dotnet environment
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+
+      # Step 3: Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.DATABASE_SOLUTION_PATH }}
+
+      # Step 4: Build the project
+      - name: Build the project
+        run: dotnet build ${{ env.DATABASE_SOLUTION_PATH }} --no-restore
 
   test:
     # The type of runner that the job will run on
@@ -59,4 +81,4 @@ jobs:
 
       # Step 3: Test the project
       - name: Test the project
-        run: dotnet test ${{ env.SOLUTION_PATH }} --no-restore
+        run: dotnet test ${{ env.BACKEND_SOLUTION_PATH }} --no-restore
