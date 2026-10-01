@@ -1,5 +1,6 @@
 ﻿using Backend.Api.Validation.DataEndpoints;
 using Backend.Application.Capabilities;
+using Backend.Application.Options;
 using Backend.Application.Orchestrators;
 using Backend.Application.Persistence;
 using Backend.Application.Plans;
@@ -35,6 +36,9 @@ internal static class ServiceCollectionRegistration
             services.AddScoped(typeof(IUrlShortenerOrchestrator), typeof(UrlShortenerOrchestrator));
             services.AddScoped(typeof(IUrlShortenerPlan), typeof(UrlShortenerPlan));
             services.AddScoped<IBase62Converter, Base62Converter>();
+
+            services.AddOptions<ShortenerSettings>()
+                .BindConfiguration(ShortenerSettings.SectionName);
 
             return services;
         }
