@@ -3,6 +3,7 @@ using Backend.Contracts.ApiRequestTypes.DataEndpoint;
 using Backend.Contracts.ApiResponseTypes.DataEndpoint;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Backend.Api.Endpoints;
 
@@ -30,6 +31,7 @@ public static class DataEndpoints
         IValidator<ApiDataRequest> validator,
         IUrlShortenerOrchestrator orchestrator)
     {
+        var timer = Stopwatch.StartNew();
         // Validate request object
         var validationResult = validator.Validate(request);
 
@@ -48,7 +50,9 @@ public static class DataEndpoints
             ShortUrl = orchResult.ShortUrl
         };
 
+        timer.Stop();
+
         // return response
-        return Results.Created("/data/shorten", response);
+        return Results.Created("/data/shorten", new { Response = response, ServerTime = timer.ElapsedMilliseconds });
     }
 }
