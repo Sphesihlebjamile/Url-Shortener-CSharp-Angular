@@ -2,7 +2,7 @@
 
 namespace Backend.Infrastructure.Capabilities
 {
-    public class Base62Function : ICapability<long, string>
+    public class Base62Converter : IBase62Converter
     {
         private readonly string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         private readonly long Divisor = 62;

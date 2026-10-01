@@ -1,7 +1,9 @@
 ﻿using Backend.Api.Validation.DataEndpoints;
+using Backend.Application.Capabilities;
 using Backend.Application.Orchestrators;
 using Backend.Application.Persistence;
 using Backend.Application.Plans;
+using Backend.Infrastructure.Capabilities;
 using Backend.Infrastructure.Orchestrators;
 using Backend.Infrastructure.Persistence;
 using Backend.Infrastructure.Plans;
@@ -32,6 +34,7 @@ internal static class ServiceCollectionRegistration
         {
             services.AddScoped(typeof(IUrlShortenerOrchestrator), typeof(UrlShortenerOrchestrator));
             services.AddScoped(typeof(IUrlShortenerPlan), typeof(UrlShortenerPlan));
+            services.AddScoped<IBase62Converter, Base62Converter>();
 
             return services;
         }
