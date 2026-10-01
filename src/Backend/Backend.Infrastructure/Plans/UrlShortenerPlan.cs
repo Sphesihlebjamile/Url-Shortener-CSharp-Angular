@@ -1,24 +1,57 @@
-﻿using Backend.Application.Plans;
+﻿using Backend.Application.Capabilities;
+using Backend.Application.Options;
+using Backend.Application.Persistence;
+using Backend.Application.Plans;
 using Backend.Contracts.ApiRequestTypes.DataEndpoint;
 using Backend.Contracts.ApiResponseTypes.DataEndpoint;
+using Microsoft.Extensions.Options;
 
 namespace Backend.Infrastructure.Plans;
 
 public sealed class UrlShortenerPlan :
     IUrlShortenerPlan
 {
-    public Task<UrlShortenerOutput> ExecuteAsync(UrlShortenerInput request)
+    private readonly IUrlShortenerDb _urlShortenerDb;
+    private readonly IBase62Converter _base62Converter;
+    private readonly ShortenerSettings _shortenerSettings;
+
+    public UrlShortenerPlan(
+        IUrlShortenerDb urlShortenerDb,
+        IBase62Converter base62Converter,
+        IOptions<ShortenerSettings> shortenerSettings)
+    {
+        _urlShortenerDb = urlShortenerDb;
+        _base62Converter = base62Converter;
+        _shortenerSettings = shortenerSettings.Value;
+    }
+
+    public async Task<UrlShortenerOutput> ExecuteAsync(UrlShortenerInput request)
     {
         // Validate that the longUrl does not exist in the database
+        var shortUrlCode = await _urlShortenerDb.GetShortUrlCodeByLongUrl(request.LongUrl, CancellationToken.None);
+
+        if(!string.IsNullOrWhiteSpace(shortUrlCode))
+        {
+            return new UrlShortenerOutput($"{_shortenerSettings.ApplicationUrl}/{shortUrlCode}");
+        }
 
         // If it doesn't exist, get a globally unique Id
+        var currentMaxId = await _urlShortenerDb.GetLatestUrlsId(CancellationToken.None);
+        var newUniqueId = currentMaxId + 1;
 
         // Generate a base62 unique key
+        var shortCode = _base62Converter.Execute(newUniqueId);
 
         // Save to database
+        var dbResult = await _urlShortenerDb.InsertNewUrl(newUniqueId, request.LongUrl, shortCode, CancellationToken.None);
+
+        if (!dbResult)
+        {
+            throw new Exception("Failure");
+        }
 
         // Return
-        var output = new UrlShortenerOutput("https://localhost/7017");
-        return Task.FromResult(output);
+        var output = new UrlShortenerOutput($"{_shortenerSettings.ApplicationUrl}/{shortCode}");
+        return output;
     }
 }
