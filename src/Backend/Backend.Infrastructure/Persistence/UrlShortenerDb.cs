@@ -31,4 +31,36 @@ public sealed class UrlShortenerDb : IUrlShortenerDb
 
         return data.AsList().FirstOrDefault();
     }
+
+    public async Task<string?> GetShortUrlCodeByLongUrl(string longUrl, CancellationToken cancellationToken)
+    {
+        await using var connection = this.OpenConnection();
+
+        var command = new CommandDefinition(
+                commandText: StoredProcedureNames.GETSHORTURLCODEBYLONGURL,
+                parameters: new { LongUrl = longUrl },
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken
+            );
+
+        var data = await connection.QueryAsync<string>(command);
+
+        return data.AsList().FirstOrDefault();
+    }
+
+    public async Task<bool> InsertNewUrl(long id, string longUrl, string shortUrl, CancellationToken cancellationToken)
+    {
+        await using var connection = this.OpenConnection();
+
+        var command = new CommandDefinition(
+                commandText: StoredProcedureNames.INSERTNEWURLINTOURLS,
+                parameters: new { Id = id, LongUrl = longUrl, ShortUrlCode = shortUrl },
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken
+            );
+
+        var data = await connection.QueryAsync<int>(command);
+
+        return data.First() > 0;
+    }
 }
