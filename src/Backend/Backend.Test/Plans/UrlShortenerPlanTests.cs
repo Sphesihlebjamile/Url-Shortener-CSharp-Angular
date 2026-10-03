@@ -1,4 +1,5 @@
 ﻿using Backend.Application.Capabilities;
+using Backend.Application.Exceptions;
 using Backend.Application.Options;
 using Backend.Application.Persistence;
 using Backend.Application.Plans;
@@ -52,5 +53,32 @@ public class UrlShortenerPlanTests
         // Assert
         response.ShouldNotBeNull();
         response.ShortUrl.ShouldNotBeNullOrEmpty();
+    }
+
+    [Fact]
+    public async Task UrlShortenerPlan_WhenDatabaseFailed_ShowThrowShortUrlGenerationException()
+    {
+        // Arrange
+        var shortUrlCode = "4C92";
+        var uniqueId = 1000000L;
+        var d = new UrlShortenerInput("sdgvsdfsdf");
+
+        _urlShortenerDb.GetShortUrlCodeByLongUrl(d.LongUrl, CancellationToken.None)
+            .Returns<string?>(string.Empty);
+        _urlShortenerDb.GetLatestUrlsId(CancellationToken.None)
+            .Returns<long>(uniqueId);
+        _base62Converter.Execute(uniqueId + 1)
+            .Returns<string>(shortUrlCode);
+        _urlShortenerDb.InsertNewUrl(uniqueId + 1, d.LongUrl, shortUrlCode, CancellationToken.None)
+            .Returns<bool>(false);
+
+        // Act & Assert
+        var result = await Should.ThrowAsync<ShortUrlGenerationException>(
+            async () => await _sut.ExecuteAsync(d));
+        result.ShouldNotBeNull();
+        result.Message.ShouldBe("Failed to insert new URL into database");
+        result.Title.ShouldBe("Failed to generate short URL");
+        result.StatusCode.ShouldBe(500);
+        result.ShouldBeAssignableTo<IApplicationException>();
     }
 }
