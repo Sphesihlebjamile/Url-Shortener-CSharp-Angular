@@ -1,4 +1,5 @@
 ﻿using Backend.Application.Capabilities;
+using Backend.Application.Exceptions;
 using Backend.Application.Options;
 using Backend.Application.Persistence;
 using Backend.Application.Plans;
@@ -47,7 +48,7 @@ public sealed class UrlShortenerPlan :
 
         if (!dbResult)
         {
-            throw new Exception("Failure");
+            throw new ShortUrlGenerationException("Failed to insert new URL into database");
         }
 
         // Return
