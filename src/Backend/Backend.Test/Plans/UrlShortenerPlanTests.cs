@@ -37,6 +37,7 @@ public class UrlShortenerPlanTests
         var shortUrlCode = "4C92";
         var uniqueId = 1000000L;
         var d = new UrlShortenerInput("sdgvsdfsdf");
+        var expectedShortUrl = $"{_shortenerSettings.Value.ApplicationUrl}/{shortUrlCode}";
 
         _urlShortenerDb.GetShortUrlCodeByLongUrl(d.LongUrl, CancellationToken.None)
             .Returns<string?>(string.Empty);
@@ -53,6 +54,7 @@ public class UrlShortenerPlanTests
         // Assert
         response.ShouldNotBeNull();
         response.ShortUrl.ShouldNotBeNullOrEmpty();
+        response.ShortUrl.ShouldBe(expectedShortUrl);
     }
 
     [Fact]
