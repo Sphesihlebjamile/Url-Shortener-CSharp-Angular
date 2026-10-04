@@ -28,6 +28,11 @@ public sealed class UrlShortenerPlan :
 
     public async Task<UrlShortenerOutput> ExecuteAsync(UrlShortenerInput request)
     {
+        if (string.IsNullOrWhiteSpace(request.LongUrl))
+        {
+            throw new ShortUrlGenerationException("Long URL cannot be null or empty", 422);
+        }
+
         // Validate that the longUrl does not exist in the database
         var shortUrlCode = await _urlShortenerDb.GetShortUrlCodeByLongUrl(request.LongUrl, CancellationToken.None);
 
