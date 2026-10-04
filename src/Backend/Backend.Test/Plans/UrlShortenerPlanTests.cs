@@ -104,7 +104,9 @@ public class UrlShortenerPlanTests
     public async Task UrlShortenerPlan_WhenLongUrlNull_ShouldThrowShortUrlGenerationException()
     {
         // Arrange
+        #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         var urlShortenerPlanInput = new UrlShortenerInput(null);
+        #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
         // Act & Assert
         var result = await Should.ThrowAsync<ShortUrlGenerationException>(
