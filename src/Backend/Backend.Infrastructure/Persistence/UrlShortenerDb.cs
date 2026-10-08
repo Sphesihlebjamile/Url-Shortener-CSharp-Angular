@@ -1,11 +1,4 @@
-﻿using Backend.Application.Persistence;
-using Microsoft.Data.SqlClient;
-using Dapper;
-using Backend.Domain.Constants;
-using System.Data;
-using System.Diagnostics.CodeAnalysis;
-
-namespace Backend.Infrastructure.Persistence;
+﻿namespace Backend.Infrastructure.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class UrlShortenerDb : IUrlShortenerDb

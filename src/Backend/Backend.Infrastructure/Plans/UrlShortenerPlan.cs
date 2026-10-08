@@ -1,13 +1,4 @@
-﻿using Backend.Application.Capabilities;
-using Backend.Application.Exceptions;
-using Backend.Application.Options;
-using Backend.Application.Persistence;
-using Backend.Application.Plans;
-using Backend.Contracts.ApiRequestTypes.DataEndpoint;
-using Backend.Contracts.ApiResponseTypes.DataEndpoint;
-using Microsoft.Extensions.Options;
-
-namespace Backend.Infrastructure.Plans;
+﻿namespace Backend.Infrastructure.Plans;
 
 public sealed class UrlShortenerPlan :
     IUrlShortenerPlan

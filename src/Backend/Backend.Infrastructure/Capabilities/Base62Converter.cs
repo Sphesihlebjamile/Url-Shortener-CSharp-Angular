@@ -1,6 +1,4 @@
-﻿using Backend.Application.Capabilities;
-
-namespace Backend.Infrastructure.Capabilities
+﻿namespace Backend.Infrastructure.Capabilities
 {
     public class Base62Converter : IBase62Converter
     {
