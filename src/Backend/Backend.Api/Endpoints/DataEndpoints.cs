@@ -1,12 +1,4 @@
-﻿using Backend.Application.Orchestrators;
-using Backend.Contracts.ApiRequestTypes.DataEndpoint;
-using Backend.Contracts.ApiResponseTypes.DataEndpoint;
-using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-
-namespace Backend.Api.Endpoints;
+﻿namespace Backend.Api.Endpoints;
 
 public static class DataEndpoints
 {

@@ -1,7 +1,4 @@
-﻿using Backend.Api.Endpoints;
-using System.Diagnostics.CodeAnalysis;
-
-namespace Backend.Api.Configuration;
+﻿namespace Backend.Api.Configuration;
 
 [ExcludeFromCodeCoverage]
 public static class WebApplicationRegistration

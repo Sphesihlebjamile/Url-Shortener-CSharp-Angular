@@ -1,7 +1,4 @@
-﻿using Backend.Contracts.ApiRequestTypes.DataEndpoint;
-using FluentValidation;
-
-namespace Backend.Api.Validation.DataEndpoints;
+﻿namespace Backend.Api.Validation.DataEndpoints;
 
 public class ApiDataRequestValidator : AbstractValidator<ApiDataRequest>
 {

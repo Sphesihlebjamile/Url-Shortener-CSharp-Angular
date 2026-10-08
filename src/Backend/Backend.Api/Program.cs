@@ -1,4 +1,3 @@
-using Backend.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
