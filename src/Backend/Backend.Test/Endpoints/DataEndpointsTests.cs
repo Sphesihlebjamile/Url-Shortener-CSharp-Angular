@@ -1,28 +1,14 @@
-﻿using Backend.Api.Endpoints;
-using Backend.Application.Orchestrators;
-using Backend.Application.Persistence;
-using Backend.Contracts.ApiRequestTypes.DataEndpoint;
-using Backend.Contracts.ApiResponseTypes.DataEndpoint;
-using FluentValidation;
-using FluentValidation.Results;
-using Microsoft.AspNetCore.Http.HttpResults;
-using NSubstitute;
-using NSubstitute.ReceivedExtensions;
-using Shouldly;
-
-namespace Backend.Test.Endpoints;
+﻿namespace Backend.Test.Endpoints;
 
 public class DataEndpointsTests
 {
     private IValidator<ApiDataRequest> _validator;
     private IUrlShortenerOrchestrator _orchestrator;
-    private readonly IUrlShortenerDb _urlShortenerDb;
 
     public DataEndpointsTests()
     {
         _validator = Substitute.For<IValidator<ApiDataRequest>>();
         _orchestrator = Substitute.For<IUrlShortenerOrchestrator>();
-        _urlShortenerDb = Substitute.For<IUrlShortenerDb>();
     }
 
     [Fact]

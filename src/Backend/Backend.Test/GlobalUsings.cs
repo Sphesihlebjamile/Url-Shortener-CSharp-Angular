@@ -1,0 +1,21 @@
+﻿global using Backend.Api.Endpoints;
+global using Backend.Application.Capabilities;
+global using Backend.Application.Exceptions;
+global using Backend.Application.Options;
+global using Backend.Application.Orchestrators;
+global using Backend.Application.Persistence;
+global using Backend.Application.Plans;
+global using Backend.Contracts.ApiRequestTypes.DataEndpoint;
+global using Backend.Contracts.ApiResponseTypes.DataEndpoint;
+global using Backend.Infrastructure.Capabilities;
+global using Backend.Infrastructure.Orchestrators;
+global using Backend.Infrastructure.Plans;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Microsoft.Extensions.Options;
+global using NSubstitute;
+global using NSubstitute.ReceivedExtensions;
+global using FluentValidation;
+global using FluentValidation.Results;
+global using Shouldly;
+
+namespace Backend.Test;

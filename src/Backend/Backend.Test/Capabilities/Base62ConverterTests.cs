@@ -1,7 +1,4 @@
-﻿using Backend.Infrastructure.Capabilities;
-using Shouldly;
-
-namespace Backend.Test.Capabilities;
+﻿namespace Backend.Test.Capabilities;
 
 public class Base62ConverterTests
 {
