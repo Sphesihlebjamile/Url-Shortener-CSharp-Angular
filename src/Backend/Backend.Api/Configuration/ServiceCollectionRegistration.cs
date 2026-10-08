@@ -9,9 +9,11 @@ using Backend.Infrastructure.Orchestrators;
 using Backend.Infrastructure.Persistence;
 using Backend.Infrastructure.Plans;
 using FluentValidation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Backend.Api.Configuration;
 
+[ExcludeFromCodeCoverage]
 internal static class ServiceCollectionRegistration
 {
     extension(IServiceCollection services)

@@ -4,11 +4,13 @@ using Backend.Contracts.ApiResponseTypes.DataEndpoint;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Backend.Api.Endpoints;
 
 public static class DataEndpoints
 {
+    [ExcludeFromCodeCoverage]
     public static IEndpointRouteBuilder MapDataEndpoints(
         this IEndpointRouteBuilder builder)
 
@@ -47,12 +49,14 @@ public static class DataEndpoints
         // map output to response object
         var response = new ApiDataResponse()
         {
-            ShortUrl = orchResult.ShortUrl
+            ShortUrl = orchResult.ShortUrl,
         };
 
         timer.Stop();
+        
+        response.ServerTime = timer.ElapsedMilliseconds;
 
         // return response
-        return Results.Created("/data/shorten", new { Response = response, ServerTime = timer.ElapsedMilliseconds });
+        return Results.Created("/data/shorten", response);
     }
 }

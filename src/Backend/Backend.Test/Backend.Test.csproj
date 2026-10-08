@@ -7,8 +7,19 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup>
+  	<CollectCoverage>true</CollectCoverage>
+  	<CoverletOutputFormat>cobertura</CoverletOutputFormat>
+  	<Threshold>80</Threshold>
+  	<ThresholdType>line</ThresholdType>
+  	<ThresholdStat>total</ThresholdStat>
+  	<Exclude>[LegalEcho.Backend.Domain]*</Exclude>
+  	<ExcludeByFile>**/obj/**/*.cs,**/Migrations/**/*.cs,**/Program.cs,**/DependencyInjection.cs,**/DTO/**/*.cs</ExcludeByFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="NSubstitute" Version="6.2.0" />
     <PackageReference Include="Shouldly" Version="4.3.0" />

@@ -3,4 +3,5 @@
 public sealed class ApiDataResponse
 {
     public required string ShortUrl { get; set; }
+    public long ServerTime { get; set; }
 }
