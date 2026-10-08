@@ -40,7 +40,7 @@ jobs:
 
       # Step 4: Build the project
       - name: Build the project
-        run: dotnet build ${{ env.BACKEND_SOLUTION_PATH }} --no-restore
+        run: dotnet build ${{ env.BACKEND_SOLUTION_PATH }} --configuration Release --no-restore
 
   build_database:
     # THe type of runner that the job will run on
@@ -61,7 +61,7 @@ jobs:
 
       # Step 4: Build the project
       - name: Build the project
-        run: dotnet build ${{ env.DATABASE_SOLUTION_PATH }} --no-restore
+        run: dotnet build ${{ env.DATABASE_SOLUTION_PATH }} --configuration Release --no-restore
 
   test:
     # The type of runner that the job will run on
@@ -81,4 +81,4 @@ jobs:
 
       # Step 3: Test the project
       - name: Test the project
-        run: dotnet test ${{ env.BACKEND_SOLUTION_PATH }} --no-restore
+        run: dotnet test ${{ env.BACKEND_SOLUTION_PATH }} --configuration Release --no-build --verbosity normal
