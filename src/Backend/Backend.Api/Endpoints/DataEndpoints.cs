@@ -15,7 +15,8 @@ public static class DataEndpoints
             .WithDisplayName("Shorten URL Endpoint")
             .WithDescription("Accepts a long URL as input and returns a shortened version")
             .AllowAnonymous()
-            .Produces<ApiDataResponse>(StatusCodes.Status201Created, contentType: "application/json");
+            .Produces<ApiDataResponse>(StatusCodes.Status201Created, contentType: "application/json")
+            .Produces<ApiErrorResponse>(StatusCodes.Status422UnprocessableEntity);
 
         return builder;
     }
@@ -23,6 +24,7 @@ public static class DataEndpoints
     public static async Task<IResult> ShortenUrl(
         [FromBody] ApiDataRequest request,
         IValidator<ApiDataRequest> validator,
+        HttpContext httpContext,
         IUrlShortenerOrchestrator orchestrator)
     {
         var timer = Stopwatch.StartNew();
@@ -31,7 +33,7 @@ public static class DataEndpoints
         var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)
         {
-            return Results.BadRequest(validationResult.Errors);
+            return validationResult.FromFluentValidationException(httpContext.Request.Path, StatusCodes.Status422UnprocessableEntity);
         }
 
         // call orchestrator to execute on the url shortening
