@@ -26,9 +26,9 @@ public static class DataEndpoints
         IUrlShortenerOrchestrator orchestrator)
     {
         var timer = Stopwatch.StartNew();
-        // Validate request object
-        var validationResult = validator.Validate(request);
 
+        // Validate request object
+        var validationResult = await validator.ValidateAsync(request);
         if (!validationResult.IsValid)
         {
             return Results.BadRequest(validationResult.Errors);
@@ -44,8 +44,8 @@ public static class DataEndpoints
             ShortUrl = orchResult.ShortUrl,
         };
 
+        // Collect execution metrics
         timer.Stop();
-        
         response.ServerTime = timer.ElapsedMilliseconds;
 
         // return response

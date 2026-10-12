@@ -25,7 +25,7 @@ public sealed class UrlShortenerPlan :
         }
 
         // Validate that the longUrl does not exist in the database
-        var shortUrlCode = await _urlShortenerDb.GetShortUrlCodeByLongUrl(request.LongUrl, CancellationToken.None);
+        var shortUrlCode = await _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(request.LongUrl, CancellationToken.None);
 
         if(!string.IsNullOrWhiteSpace(shortUrlCode))
         {
@@ -33,14 +33,14 @@ public sealed class UrlShortenerPlan :
         }
 
         // If it doesn't exist, get a globally unique Id
-        var currentMaxId = await _urlShortenerDb.GetLatestUrlsId(CancellationToken.None);
+        var currentMaxId = await _urlShortenerDb.GetLatestUrlsIdAsync(CancellationToken.None);
         var newUniqueId = currentMaxId + 1;
 
         // Generate a base62 unique key
         var shortCode = _base62Converter.Execute(newUniqueId);
 
         // Save to database
-        var dbResult = await _urlShortenerDb.InsertNewUrl(newUniqueId, request.LongUrl, shortCode, CancellationToken.None);
+        var dbResult = await _urlShortenerDb.InsertNewUrlAsync(newUniqueId, request.LongUrl, shortCode, CancellationToken.None);
 
         if (!dbResult)
         {

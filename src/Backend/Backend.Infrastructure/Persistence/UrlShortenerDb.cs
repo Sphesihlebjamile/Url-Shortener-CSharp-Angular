@@ -10,7 +10,7 @@ public sealed class UrlShortenerDb : IUrlShortenerDb
 
     private SqlConnection OpenConnection() => new SqlConnection(_connectionString);
 
-    public async Task<long> GetLatestUrlsId(CancellationToken cancellationToken)
+    public async Task<long> GetLatestUrlsIdAsync(CancellationToken cancellationToken)
     {
         await using var connection = this.OpenConnection();
 
@@ -25,7 +25,7 @@ public sealed class UrlShortenerDb : IUrlShortenerDb
         return data.AsList().FirstOrDefault();
     }
 
-    public async Task<string?> GetShortUrlCodeByLongUrl(string longUrl, CancellationToken cancellationToken)
+    public async Task<string?> GetShortUrlCodeByLongUrlAsync(string longUrl, CancellationToken cancellationToken)
     {
         await using var connection = this.OpenConnection();
 
@@ -41,7 +41,7 @@ public sealed class UrlShortenerDb : IUrlShortenerDb
         return data.AsList().FirstOrDefault();
     }
 
-    public async Task<bool> InsertNewUrl(long id, string longUrl, string shortUrl, CancellationToken cancellationToken)
+    public async Task<bool> InsertNewUrlAsync(long id, string longUrl, string shortUrl, CancellationToken cancellationToken)
     {
         await using var connection = this.OpenConnection();
 

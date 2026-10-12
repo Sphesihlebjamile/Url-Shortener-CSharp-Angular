@@ -23,7 +23,7 @@ public class DataEndpointsTests
         var urlShortenerInput = new UrlShortenerInput(request.LongUrl);
 
         _orchestrator.ExecuteAsync(Arg.Any<UrlShortenerInput>()).Returns(urlShortenerOutput);
-        _validator.Validate(Arg.Any<ApiDataRequest>()).Returns(new ValidationResult());
+        _validator.ValidateAsync(Arg.Any<ApiDataRequest>()).Returns(new ValidationResult());
 
 
         // Act
@@ -54,7 +54,7 @@ public class DataEndpointsTests
         var urlShortenerInput = new UrlShortenerInput(request.LongUrl);
 
         _orchestrator.ExecuteAsync(Arg.Any<UrlShortenerInput>()).Returns(urlShortenerOutput);
-        _validator.Validate(Arg.Any<ApiDataRequest>()).Returns(new ValidationResult([
+        _validator.ValidateAsync(Arg.Any<ApiDataRequest>()).Returns(new ValidationResult([
             new ValidationFailure("LongUrl", "A long URL is required")
             ]));
 

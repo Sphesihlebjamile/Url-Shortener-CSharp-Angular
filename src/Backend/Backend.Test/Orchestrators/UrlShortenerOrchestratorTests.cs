@@ -31,13 +31,13 @@ public class UrlShortenerOrchestratorTests
         var expectedShortUrl = $"{_shortenerSettings.Value.ApplicationUrl}/{shortUrlCode}";
         var urlShortenerOutput = new UrlShortenerOutput(expectedShortUrl);
 
-        _urlShortenerDb.GetShortUrlCodeByLongUrl(urlShortenerInput.LongUrl, CancellationToken.None)
+        _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(urlShortenerInput.LongUrl, CancellationToken.None)
             .Returns<string?>(string.Empty);
-        _urlShortenerDb.GetLatestUrlsId(CancellationToken.None)
+        _urlShortenerDb.GetLatestUrlsIdAsync(CancellationToken.None)
             .Returns(uniqueId);
         _base62Converter.Execute(uniqueId + 1)
             .Returns<string>(shortUrlCode);
-        _urlShortenerDb.InsertNewUrl(uniqueId + 1, urlShortenerInput.LongUrl, shortUrlCode, CancellationToken.None)
+        _urlShortenerDb.InsertNewUrlAsync(uniqueId + 1, urlShortenerInput.LongUrl, shortUrlCode, CancellationToken.None)
             .Returns<bool>(true);
 
         // Act
@@ -77,13 +77,13 @@ public class UrlShortenerOrchestratorTests
         var uniqueId = 1000000L;
         var urlShortenerPlanInput = new UrlShortenerInput("sdgvsdfsdf");
 
-        _urlShortenerDb.GetShortUrlCodeByLongUrl(urlShortenerPlanInput.LongUrl, CancellationToken.None)
+        _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(urlShortenerPlanInput.LongUrl, CancellationToken.None)
             .Returns<string?>(string.Empty);
-        _urlShortenerDb.GetLatestUrlsId(CancellationToken.None)
+        _urlShortenerDb.GetLatestUrlsIdAsync(CancellationToken.None)
             .Returns<long>(uniqueId);
         _base62Converter.Execute(uniqueId + 1)
             .Returns<string>(shortUrlCode);
-        _urlShortenerDb.InsertNewUrl(uniqueId + 1, urlShortenerPlanInput.LongUrl, shortUrlCode, CancellationToken.None)
+        _urlShortenerDb.InsertNewUrlAsync(uniqueId + 1, urlShortenerPlanInput.LongUrl, shortUrlCode, CancellationToken.None)
             .Returns<bool>(false);
 
         // Act & ASsert
