@@ -1,4 +1,5 @@
 ﻿global using Backend.Api.Endpoints;
+global using Backend.Api.Validation.DataEndpoints;
 global using Backend.Application.Capabilities;
 global using Backend.Application.Exceptions;
 global using Backend.Application.Options;
