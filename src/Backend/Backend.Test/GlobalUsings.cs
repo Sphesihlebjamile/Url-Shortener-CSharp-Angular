@@ -12,6 +12,7 @@ global using Backend.Infrastructure.Orchestrators;
 global using Backend.Infrastructure.Plans;
 global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.Extensions.Options;
+global using Moq;
 global using NSubstitute;
 global using NSubstitute.ReceivedExtensions;
 global using FluentValidation;
