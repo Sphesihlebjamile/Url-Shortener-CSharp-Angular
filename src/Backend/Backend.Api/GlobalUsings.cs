@@ -1,0 +1,25 @@
+﻿global using System.Diagnostics;
+global using System.Diagnostics.CodeAnalysis;
+global using Backend.Api.Configuration;
+global using Backend.Api.Endpoints;
+global using Backend.Api.Extensions;
+global using Backend.Api.Validation.DataEndpoints;
+global using Backend.Application.Capabilities;
+global using Backend.Application.Exceptions;
+global using Backend.Application.Options;
+global using Backend.Application.Orchestrators;
+global using Backend.Application.Persistence;
+global using Backend.Application.Plans;
+global using Backend.Contracts.ApiRequestTypes.DataEndpoint;
+global using Backend.Contracts.ApiResponseTypes;
+global using Backend.Contracts.ApiResponseTypes.DataEndpoint;
+global using Backend.Infrastructure.Capabilities;
+global using Backend.Infrastructure.Orchestrators;
+global using Backend.Infrastructure.Persistence;
+global using Backend.Infrastructure.Plans;
+global using FluentValidation;
+global using FluentValidation.Results;
+global using Microsoft.AspNetCore.Diagnostics;
+global using Microsoft.AspNetCore.Mvc;
+
+namespace Backend.Api;

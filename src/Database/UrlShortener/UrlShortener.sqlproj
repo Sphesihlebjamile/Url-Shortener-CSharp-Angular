@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build">
+  <Sdk Name="Microsoft.Build.Sql" Version="2.1.0" />
+  <PropertyGroup>
+    <Name>urlshortener</Name>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <ModelCollation>1033, CI</ModelCollation>
+    <ProjectGuid>46e8021c-b8b5-4503-bb00-379cc926c66c</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="dbo\Functions\" />
+    <Folder Include="dbo\Security\" />
+    <Folder Include="dbo\StoredProcedures\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\UserDefinedTypes\" />
+    <Folder Include="dbo\Views\" />
+  </ItemGroup>
+</Project>
