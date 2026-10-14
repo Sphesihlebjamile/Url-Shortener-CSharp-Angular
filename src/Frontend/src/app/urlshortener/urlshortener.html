@@ -1,0 +1,42 @@
+<div class="flex items-center justify-center h-full w-full">
+    <div class="grid grid-cols-1 gap-0">
+      <div class="min-w-2xl flex flex-col items-center">
+        <header class="p-5">
+          <h1 class="text-7xl font-bold">UrlShortener</h1>
+        </header>
+        <!-- Shortener Input -->
+        <div class="w-full flex-col items-center">
+          <p>
+            Enter your URL here
+          </p>
+          <div class="w-full flex flex-col items-center">
+            <input 
+              class="shadow appearance-none border rounded w-full py-2 px-3 m-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username"
+              placeholder="Long Url"
+              [(ngModel)]="longUrl"
+            />
+            <div class="w-full flex flex-col ml-6 text-red-400 items-start font-bold">
+                @for (longUrlError of longUrlErrors; track $index) {
+                    <small class="py-1">- {{ longUrlError }}</small>
+                }
+            </div>
+            <button 
+              class="cursor-pointer bg-transparent hover:bg-neutral-800 text-black font-semibold hover:text-neutral-200 m-2 py-2 px-4 border border-neutral-800 hover:border-transparent rounded w-[50%]"
+              (click)="handleSubmit()"
+            >
+              Generate Short Url
+            </button>
+          </div>
+        </div>
+        <!-- Shortener Output -->
+        <div class="w-full m-2">
+            <div class="px-5 py-10 bg-neutral-600 shadow-none text-neutral-200 w-full border-none rounded-t-xl">
+                <p>Short Url: {{shortUrl}}</p>
+            </div>
+            <div class="px-5 flex flex-row justify-between py-2 bg-neutral-500 shadow-none text-neutral-200 w-full border-none rounded-b-xl">
+                <button class="cursor-copy underline" (click)="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
