@@ -1,6 +1,8 @@
 <Solution>
-  <Folder Name="/files/">
+  <Folder Name="/solution/" />
+  <Folder Name="/solution/azure/">
     <File Path="../../.github/workflows/backend-build.yml" />
+    <File Path="../../.github/workflows/frontend-build.yml" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="Backend.Api/Backend.Api.csproj" />
