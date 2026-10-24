@@ -21,11 +21,13 @@ export class Urlshortener {
 
   handleSubmit = (): void => {
     var validationResult = this.validateLongUrl();
-    if(validationResult){
-      this.shortUrl = this.longUrl;
+
+    if(!validationResult){ // validation errors exist
+      this.shortUrl = ShortUrlDefault;
       return;
     }
-    this.shortUrl = ShortUrlDefault;
+    this.clearLongUrlErrors();
+    this.shortUrl = this.longUrl;
   }
 
   validateLongUrl = (): boolean => {
@@ -48,5 +50,9 @@ export class Urlshortener {
     if(!response){
       alert("Failed to copy to clipboard");
     }
+  }
+
+  clearLongUrlErrors = (): void => {
+    this.longUrlErrors = [];
   }
 }
