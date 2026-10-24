@@ -2,7 +2,7 @@
 /**
  * 
  * @param text The text string to copy to the clipboard
- * @returns A promist that resolves to true if successful, false otherwise
+ * @returns A promise that resolves to true if successful, false otherwise
  */
 export const copyToClipboard = async (text: string): Promise<boolean> => {
   if(!navigator.clipboard){
