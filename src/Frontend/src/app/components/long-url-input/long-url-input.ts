@@ -54,8 +54,21 @@ export class LongUrlInput {
     if(this.longUrl.length > 999){
       errors = [...errors, "Long Url is too long"]
     }
+    if (this.longUrl && !this.isValidHttpUrl(this.longUrl.trim())) {
+      errors = [...errors, "Enter a valid URL starting with http:// or https://"]
+    }
     this.longUrlErrors.set(errors);
     return errors.length === 0;
+  }
+
+  private isValidHttpUrl(value: string): boolean {
+    try {
+      const url = new URL(value);
+      const domainPattern = /^(?=.{1,253}\.?$)[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?(?:\.[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?)+\.?$/i;
+      return (url.protocol === 'http:' || url.protocol === 'https:') && domainPattern.test(url.hostname);
+    } catch {
+      return false;
+    }
   }
 
   clearLongUrlErrors = (): void => {

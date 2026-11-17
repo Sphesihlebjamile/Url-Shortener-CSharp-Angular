@@ -83,4 +83,25 @@ public class ApiDataRequestValidatorTests
         result.Errors.ShouldBeEmpty();
         result.IsValid.ShouldBeTrue();
     }
+
+    [Theory]
+    [InlineData("https://gsdfgsdfgsdfg")]
+    [InlineData("ftp://example.com/path")]
+    [InlineData("https://-invalid.com/path")]
+    public async Task ValidateAsync_WhenLongUrlHasInvalidFormat_ShouldFailWithError(string longUrl)
+    {
+        // Arrange
+        var request = new ApiDataRequest()
+        {
+            LongUrl = longUrl
+        };
+
+        // Act
+        var result = await _validator.ValidateAsync(request, CancellationToken.None);
+
+        // Assert
+        result.IsValid.ShouldBeFalse();
+        result.Errors.ShouldContain(error =>
+            error.ErrorMessage == "The long URL must be a valid HTTP or HTTPS URL with a valid domain");
+    }
 }

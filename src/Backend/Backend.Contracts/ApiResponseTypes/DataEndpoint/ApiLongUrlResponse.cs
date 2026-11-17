@@ -2,6 +2,6 @@
 
 public sealed class ApiLongUrlResponse
 {
-    public string LongUrl { get; set; }
+    public required string LongUrl { get; set; }
     public long ServerTime { get; set; }
 }
