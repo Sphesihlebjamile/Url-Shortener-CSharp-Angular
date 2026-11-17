@@ -64,7 +64,8 @@ export class LongUrlInput {
   private isValidHttpUrl(value: string): boolean {
     try {
       const url = new URL(value);
-      return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname.length > 0;
+      const domainPattern = /^(?=.{1,253}\.?$)[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?(?:\.[a-z\d](?:[a-z\d-]{0,61}[a-z\d])?)+\.?$/i;
+      return (url.protocol === 'http:' || url.protocol === 'https:') && domainPattern.test(url.hostname);
     } catch {
       return false;
     }
