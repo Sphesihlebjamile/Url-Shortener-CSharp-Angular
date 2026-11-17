@@ -1,5 +1,6 @@
 ﻿global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
+global using System.Text.RegularExpressions;
 global using Backend.Api.Configuration;
 global using Backend.Api.Endpoints;
 global using Backend.Api.Extensions;
