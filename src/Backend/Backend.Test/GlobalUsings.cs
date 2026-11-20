@@ -1,4 +1,5 @@
 ﻿global using Backend.Api.Endpoints;
+global using Backend.Api.Validation;
 global using Backend.Api.Validation.DataEndpoints;
 global using Backend.Application.Capabilities;
 global using Backend.Application.Exceptions;
@@ -10,8 +11,10 @@ global using Backend.Contracts.ApiRequestTypes.DataEndpoint;
 global using Backend.Contracts.ApiResponseTypes;
 global using Backend.Contracts.ApiResponseTypes.DataEndpoint;
 global using Backend.Infrastructure.Capabilities;
+global using Backend.Infrastructure.Extensions;
 global using Backend.Infrastructure.Orchestrators;
 global using Backend.Infrastructure.Plans;
+global using Backend.Test.Setup;
 global using FluentValidation;
 global using FluentValidation.Results;
 global using Microsoft.AspNetCore.Http;

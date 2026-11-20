@@ -2,7 +2,7 @@
 
 public class LongUrlRequestValidator
 {
-    public static ValidationResult ValidateLongUrl(string shortUrlCode)
+    public static ValidationResult ValidateShortUrlCode(string shortUrlCode)
     {
         var validator = new InlineValidator<string>();
 

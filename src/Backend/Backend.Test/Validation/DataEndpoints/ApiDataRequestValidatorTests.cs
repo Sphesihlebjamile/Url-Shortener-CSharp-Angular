@@ -2,7 +2,9 @@
 
 public class ApiDataRequestValidatorTests
 {
-    private readonly IValidator<ApiDataRequest> _validator = new ApiDataRequestValidator();
+    private static IHostEnvironment _hostEnvironment = new FakeHostEnvironment(Environments.Staging);
+    private readonly IValidator<ApiDataRequest> _validator = new ApiDataRequestValidator(_hostEnvironment);
+    
     [Fact]
     public async Task ValidateAsync_WhenNoLongUrlProvided_ShouldFailWithErrors()
     {
