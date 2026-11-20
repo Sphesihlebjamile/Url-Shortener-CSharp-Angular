@@ -46,7 +46,7 @@ public static class EnvironmentExtensions
         public bool IsStaging() =>
             hostEnvironment.IsEnvironment(Environments.Staging);
         public bool IsProduction() =>
-            hostEnvironment.IsProduction();
+            hostEnvironment.IsEnvironment(Environments.Production);
 
         public string GetRequiredCanonicalEnvironmentName()
         {
