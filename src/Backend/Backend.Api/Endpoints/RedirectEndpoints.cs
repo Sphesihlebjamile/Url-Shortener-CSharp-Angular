@@ -2,6 +2,7 @@
 
 public static class RedirectEndpoints
 {
+    [ExcludeFromCodeCoverage]
     public static IEndpointRouteBuilder MapRedirectEndpoints(
         this IEndpointRouteBuilder builder)
     {
@@ -22,12 +23,10 @@ public static class RedirectEndpoints
         IOptions<ShortenerSettings> shortenerSettings,
         ILongUrlOrchestrator orchestrator)
     {
-        var timer = Stopwatch.StartNew();
-
         var validationResult = LongUrlRequestValidator.ValidateShortUrlCode(shortUrlCode);
         if (!validationResult.IsValid)
         {
-            return validationResult.FromFluentValidationException(httpContext.Request.Path, StatusCodes.Status422UnprocessableEntity);
+            return Results.Redirect(shortenerSettings.Value.ClientApplicationHomeUrl, permanent: false);
         }
 
         try
@@ -37,8 +36,7 @@ public static class RedirectEndpoints
         }
         catch (Exception ex)
         {
-            var clientHomeUrl = shortenerSettings.Value.ClientApplicationHomeUrl;
-            return Results.Redirect(clientHomeUrl);
+            return Results.Redirect(shortenerSettings.Value.ClientApplicationHomeUrl, permanent: false);
         }
     }
 }
