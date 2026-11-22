@@ -5,10 +5,10 @@ internal static class ServiceCollectionRegistration
 {
     extension(IServiceCollection services)
     {
-        internal IServiceCollection AddApi()
+        internal IServiceCollection AddApi(IHostEnvironment hostEnvironment)
         {
             services.AddValidation();
-            services.AddApplication();
+            services.AddApplication(hostEnvironment);
 
             services.AddExceptionHandler<GlobalExceptionHandler>();
             services.AddProblemDetails();
@@ -23,7 +23,7 @@ internal static class ServiceCollectionRegistration
             return services;
         }
 
-        internal IServiceCollection AddApplication()
+        internal IServiceCollection AddApplication(IHostEnvironment hostEnvironment)
         {
             services.AddScoped(typeof(IUrlShortenerOrchestrator), typeof(UrlShortenerOrchestrator));
             services.AddScoped(typeof(ILongUrlOrchestrator), typeof(LongUrlOrchestrator));
@@ -32,7 +32,12 @@ internal static class ServiceCollectionRegistration
             services.AddScoped<IBase62Converter, Base62Converter>();
 
             services.AddOptions<ShortenerSettings>()
-                .BindConfiguration(ShortenerSettings.SectionName);
+                .BindConfiguration(ShortenerSettings.SectionName)
+                .Validate(settings =>
+                    HttpUrlValidator.BeValidHttpUrl(settings.ApiApplicationUrl, hostEnvironment) &&
+                    HttpUrlValidator.BeValidHttpUrl(settings.ClientApplicationHomeUrl, hostEnvironment),
+                    failureMessage: "Invalid API or Client application URLs.")
+                .ValidateOnStart();
 
             return services;
         }
