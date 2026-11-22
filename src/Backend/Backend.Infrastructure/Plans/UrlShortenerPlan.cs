@@ -29,7 +29,7 @@ public sealed class UrlShortenerPlan :
 
         if(!string.IsNullOrWhiteSpace(shortUrlCode))
         {
-            return new UrlShortenerOutput($"{_shortenerSettings.ApplicationUrl}/{shortUrlCode}");
+            return new UrlShortenerOutput($"{_shortenerSettings.ApiApplicationUrl}/{shortUrlCode}");
         }
 
         // If it doesn't exist, get a globally unique Id
@@ -48,7 +48,7 @@ public sealed class UrlShortenerPlan :
         }
 
         // Return
-        var output = new UrlShortenerOutput($"{_shortenerSettings.ApplicationUrl}/{shortCode}");
+        var output = new UrlShortenerOutput($"{_shortenerSettings.ApiApplicationUrl}/{shortCode}");
         return output;
     }
 }

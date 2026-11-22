@@ -11,7 +11,8 @@ public class UrlShortenerPlanTests
     {
         _shortenerSettings = Options.Create(new ShortenerSettings()
         {
-            ApplicationUrl = "https://localhost:7017"
+            ApiApplicationUrl = "https://localhost:7017",
+            ClientApplicationHomeUrl = "http://localhost:4200"
         });
         _sut = new UrlShortenerPlan(
             _urlShortenerDb,
@@ -26,7 +27,7 @@ public class UrlShortenerPlanTests
         var shortUrlCode = "4C92";
         var uniqueId = 1000000L;
         var urlShortenerPlanInput = new UrlShortenerInput("sdgvsdfsdf");
-        var expectedShortUrl = $"{_shortenerSettings.Value.ApplicationUrl}/{shortUrlCode}";
+        var expectedShortUrl = $"{_shortenerSettings.Value.ApiApplicationUrl}/{shortUrlCode}";
 
         _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(urlShortenerPlanInput.LongUrl, CancellationToken.None)
             .Returns<string?>(string.Empty);
@@ -123,7 +124,7 @@ public class UrlShortenerPlanTests
         // Assert
         result.ShouldNotBeNull();
         result.ShortUrl.ShouldNotBeNullOrEmpty();
-        result.ShortUrl.ShouldBe($"{_shortenerSettings.Value.ApplicationUrl}/{shortUrlCode}");
+        result.ShortUrl.ShouldBe($"{_shortenerSettings.Value.ApiApplicationUrl}/{shortUrlCode}");
         await _urlShortenerDb.DidNotReceive().GetLatestUrlsIdAsync(Arg.Any<CancellationToken>());
         _base62Converter.DidNotReceive().Execute(Arg.Any<long>());
         await _urlShortenerDb.DidNotReceive().InsertNewUrlAsync(Arg.Any<long>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());

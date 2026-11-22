@@ -22,7 +22,7 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddDomainServices(builder.Configuration)
-    .AddApi();
+    .AddApi(builder.Environment);
 
 var app = builder.Build();
 

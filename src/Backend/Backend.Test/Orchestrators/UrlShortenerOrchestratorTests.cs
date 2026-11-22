@@ -12,7 +12,8 @@ public class UrlShortenerOrchestratorTests
     {
         _shortenerSettings = Options.Create(new ShortenerSettings()
         {
-            ApplicationUrl = "https://localhost:7017"
+            ApiApplicationUrl = "https://localhost:7017",
+            ClientApplicationHomeUrl = "http://localhost:4200"
         });
         _urlShortenerPlan = new UrlShortenerPlan(
             _urlShortenerDb,
@@ -28,7 +29,7 @@ public class UrlShortenerOrchestratorTests
         var shortUrlCode = "4C92";
         var uniqueId = 1000000L;
         var urlShortenerInput = new UrlShortenerInput("sdgvsdfsdf");
-        var expectedShortUrl = $"{_shortenerSettings.Value.ApplicationUrl}/{shortUrlCode}";
+        var expectedShortUrl = $"{_shortenerSettings.Value.ApiApplicationUrl}/{shortUrlCode}";
         var urlShortenerOutput = new UrlShortenerOutput(expectedShortUrl);
 
         _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(urlShortenerInput.LongUrl, CancellationToken.None)

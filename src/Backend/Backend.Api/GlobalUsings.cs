@@ -5,6 +5,7 @@ global using Backend.Api.Configuration;
 global using Backend.Api.Endpoints;
 global using Backend.Api.Extensions;
 global using Backend.Api.Infrastructure.Exceptions;
+global using Backend.Api.Validation;
 global using Backend.Api.Validation.DataEndpoints;
 global using Backend.Application.Capabilities;
 global using Backend.Application.Exceptions;
@@ -23,5 +24,6 @@ global using FluentValidation;
 global using FluentValidation.Results;
 global using Microsoft.AspNetCore.Diagnostics;
 global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.Options;
 
 namespace Backend.Api;
