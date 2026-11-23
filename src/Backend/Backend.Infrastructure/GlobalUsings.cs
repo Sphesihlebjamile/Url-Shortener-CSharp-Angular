@@ -9,6 +9,7 @@ global using Backend.Application.Plans;
 global using Backend.Contracts.ApiRequestTypes.DataEndpoint;
 global using Backend.Contracts.ApiResponseTypes.DataEndpoint;
 global using Backend.Domain.Constants;
+global using Backend.Domain.Entities;
 global using Dapper;
 global using Microsoft.Data.SqlClient;
 global using Microsoft.Extensions.Options;

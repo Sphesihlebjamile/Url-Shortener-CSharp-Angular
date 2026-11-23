@@ -37,7 +37,7 @@ public static class DataEndpoints
         }
 
         // call orchestrator to execute on the url shortening
-        var input = new UrlShortenerInput(request.LongUrl!);
+        var input = new UrlShortenerInput(request.LongUrl!, request.ExpiryDate);
         var orchResult = await orchestrator.ExecuteAsync(input);
 
         // map output to response object
