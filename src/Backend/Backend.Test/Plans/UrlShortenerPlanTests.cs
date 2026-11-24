@@ -28,15 +28,16 @@ public class UrlShortenerPlanTests
         var uniqueId = 1000000L;
         var urlShortenerPlanInput = new UrlShortenerInput("sdgvsdfsdf");
         var expectedShortUrl = $"{_shortenerSettings.Value.ApiApplicationUrl}/{shortUrlCode}";
+        Url? getShortUrlByLongUrlOutput = null;
 
         _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(urlShortenerPlanInput.LongUrl, CancellationToken.None)
-            .Returns<string?>(string.Empty);
+            .Returns(getShortUrlByLongUrlOutput);
         _urlShortenerDb.GetLatestUrlsIdAsync(CancellationToken.None)
-            .Returns<long>(uniqueId);
+            .Returns(uniqueId);
         _base62Converter.Execute(uniqueId + 1)
-            .Returns<string>(shortUrlCode);
-        _urlShortenerDb.InsertNewUrlAsync(uniqueId + 1, urlShortenerPlanInput.LongUrl, shortUrlCode, CancellationToken.None)
-            .Returns<bool>(true);
+            .Returns(shortUrlCode);
+        _urlShortenerDb.InsertNewUrlAsync(uniqueId + 1, urlShortenerPlanInput.LongUrl, shortUrlCode, urlShortenerPlanInput.ExpiryDate, CancellationToken.None)
+            .Returns(true);
 
         // Act
         var response = await _sut.ExecuteAsync(urlShortenerPlanInput);
@@ -54,15 +55,16 @@ public class UrlShortenerPlanTests
         var shortUrlCode = "4C92";
         var uniqueId = 1000000L;
         var urlShortenerPlanInput = new UrlShortenerInput("sdgvsdfsdf");
+        Url? getShortUrlByLongUrlOutput = null;
 
         _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(urlShortenerPlanInput.LongUrl, CancellationToken.None)
-            .Returns<string?>(string.Empty);
+            .Returns(getShortUrlByLongUrlOutput);
         _urlShortenerDb.GetLatestUrlsIdAsync(CancellationToken.None)
-            .Returns<long>(uniqueId);
+            .Returns(uniqueId);
         _base62Converter.Execute(uniqueId + 1)
-            .Returns<string>(shortUrlCode);
-        _urlShortenerDb.InsertNewUrlAsync(uniqueId + 1, urlShortenerPlanInput.LongUrl, shortUrlCode, CancellationToken.None)
-            .Returns<bool>(false);
+            .Returns(shortUrlCode);
+        _urlShortenerDb.InsertNewUrlAsync(uniqueId + 1, urlShortenerPlanInput.LongUrl, shortUrlCode, urlShortenerPlanInput.ExpiryDate, CancellationToken.None)
+            .Returns(false);
 
         // Act & Assert
         var result = await Should.ThrowAsync<ShortUrlGenerationException>(
@@ -114,9 +116,19 @@ public class UrlShortenerPlanTests
         // Arrange
         var shortUrlCode = "4C92";
         var urlShortenerPlanInput = new UrlShortenerInput("sdgvsdfsdf");
+        Url? getShortUrlByLongUrlOutput = new()
+        {
+            Id = Random.Shared.NextInt64(),
+            CreatedDate = DateTimeOffset.UtcNow,
+            ExpiryDate = null,
+            IsActive = true,
+            LastUpdated = DateTimeOffset.UtcNow,
+            LongUrl = urlShortenerPlanInput.LongUrl,
+            ShortUrl = shortUrlCode
+        };
 
         _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(urlShortenerPlanInput.LongUrl, CancellationToken.None)
-            .Returns<string?>(shortUrlCode);
+            .Returns(getShortUrlByLongUrlOutput);
 
         // Act
         var result = await _sut.ExecuteAsync(urlShortenerPlanInput);
@@ -127,6 +139,6 @@ public class UrlShortenerPlanTests
         result.ShortUrl.ShouldBe($"{_shortenerSettings.Value.ApiApplicationUrl}/{shortUrlCode}");
         await _urlShortenerDb.DidNotReceive().GetLatestUrlsIdAsync(Arg.Any<CancellationToken>());
         _base62Converter.DidNotReceive().Execute(Arg.Any<long>());
-        await _urlShortenerDb.DidNotReceive().InsertNewUrlAsync(Arg.Any<long>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _urlShortenerDb.DidNotReceive().InsertNewUrlAsync(Arg.Any<long>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTimeOffset?>(), Arg.Any<CancellationToken>());
     }
 }
