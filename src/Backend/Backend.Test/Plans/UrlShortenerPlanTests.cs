@@ -141,4 +141,43 @@ public class UrlShortenerPlanTests
         _base62Converter.DidNotReceive().Execute(Arg.Any<long>());
         await _urlShortenerDb.DidNotReceive().InsertNewUrlAsync(Arg.Any<long>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTimeOffset?>(), Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task UrlShortenerPlan_WhenLongUrlExistsAndExpired_ShouldReturnExistingShortUrlAndMarkAsActive()
+    {
+        // Arrange
+        var shortUrlCode = "K9s13EF";
+        var urlShortenerPlanInput = new UrlShortenerInput("https://existingLongUrl.co.za", DateTimeOffset.UtcNow.AddMonths(3));
+        Url getShortUrlByLongUrlOutput = new()
+        {
+            Id = Random.Shared.NextInt64(),
+            ShortUrl = shortUrlCode,
+            LongUrl = urlShortenerPlanInput.LongUrl,
+            IsActive = false,
+            CreatedDate = DateTimeOffset.UtcNow.AddMonths(-3),
+            ExpiryDate = DateTimeOffset.UtcNow.AddMonths(-2),
+            LastUpdated = DateTime.UtcNow
+        };
+
+        _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(urlShortenerPlanInput.LongUrl, CancellationToken.None)
+            .Returns(getShortUrlByLongUrlOutput);
+        _urlShortenerDb.EnableShortUrl(getShortUrlByLongUrlOutput.Id, urlShortenerPlanInput.ExpiryDate, Arg.Any<CancellationToken>())
+            .Returns(true);
+
+        // Act
+        var result = await _sut.ExecuteAsync(urlShortenerPlanInput);
+
+        // Assert
+        await _urlShortenerDb.Received(1)
+            .GetShortUrlCodeByLongUrlAsync(urlShortenerPlanInput.LongUrl, CancellationToken.None);
+        await _urlShortenerDb.Received(1)
+            .EnableShortUrl(getShortUrlByLongUrlOutput.Id, urlShortenerPlanInput.ExpiryDate, Arg.Any<CancellationToken>());
+        await _urlShortenerDb.DidNotReceive()
+            .GetLatestUrlsIdAsync(Arg.Any<CancellationToken>());
+        _base62Converter.DidNotReceive()
+            .Execute(Arg.Any<long>());
+        await _urlShortenerDb.DidNotReceive()
+            .InsertNewUrlAsync(Arg.Any<long>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTimeOffset?>(), Arg.Any<CancellationToken>());
+        result.ShortUrl.ShouldBe($"{_shortenerSettings.Value.ApiApplicationUrl}/{shortUrlCode}");
+    }
 }
