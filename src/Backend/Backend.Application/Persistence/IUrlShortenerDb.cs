@@ -3,7 +3,9 @@
 public interface IUrlShortenerDb
 {
     Task<long> GetLatestUrlsIdAsync(CancellationToken cancellationToken);
-    Task<string?> GetShortUrlCodeByLongUrlAsync(string longUrl, CancellationToken cancellationToken);
-    Task<bool> InsertNewUrlAsync(long id, string longUrl, string shortUrl, CancellationToken cancellationToken);
-    Task<string?> GetLongUrlByShortUrlCode(string shortUrlCode, CancellationToken cancellationToken);
+    Task<Url?> GetShortUrlCodeByLongUrlAsync(string longUrl, CancellationToken cancellationToken);
+    Task<bool> InsertNewUrlAsync(long id, string longUrl, string shortUrl, DateTimeOffset? expiryDate, CancellationToken cancellationToken);
+    Task<Url?> GetLongUrlByShortUrlCode(string shortUrlCode, CancellationToken cancellationToken);
+    Task<bool> EnableShortUrl(long id, DateTimeOffset? newExpiryDate, CancellationToken cancellationToken);
+    Task<bool> DisableShortUrl(long id, CancellationToken cancellationToken);
 }

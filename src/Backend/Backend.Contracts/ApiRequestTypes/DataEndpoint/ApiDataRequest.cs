@@ -3,4 +3,5 @@
 public sealed class ApiDataRequest
 {
     public string? LongUrl { get; set; }
+    public DateTimeOffset? ExpiryDate { get; set; } = null;
 }

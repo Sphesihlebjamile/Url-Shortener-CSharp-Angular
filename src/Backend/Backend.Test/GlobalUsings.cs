@@ -10,6 +10,7 @@ global using Backend.Application.Plans;
 global using Backend.Contracts.ApiRequestTypes.DataEndpoint;
 global using Backend.Contracts.ApiResponseTypes;
 global using Backend.Contracts.ApiResponseTypes.DataEndpoint;
+global using Backend.Domain.Entities;
 global using Backend.Infrastructure.Capabilities;
 global using Backend.Infrastructure.Extensions;
 global using Backend.Infrastructure.Orchestrators;

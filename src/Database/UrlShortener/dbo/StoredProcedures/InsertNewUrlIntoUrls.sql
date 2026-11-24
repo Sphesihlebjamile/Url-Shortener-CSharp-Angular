@@ -1,7 +1,8 @@
 CREATE PROCEDURE [dbo].[InsertNewUrlIntoUrls]
 	@Id [BIGINT],
 	@LongUrl [NVARCHAR](MAX),
-	@ShortUrlCode [NVARCHAR](7)
+	@ShortUrlCode [NVARCHAR](7),
+	@ExpiryDate DATETIMEOFFSET(7)
 AS
 BEGIN
 	SET XACT_ABORT ON;
@@ -11,9 +12,21 @@ BEGIN
 	
 	BEGIN TRY
 		INSERT INTO [dbo].[Urls]
-			([Id], [LongUrl], [ShortUrlCode])
+			([Id],
+			[LongUrl],
+			[ShortUrlCode],
+			[IsActive],
+			[ExpiryDate],
+			[CreatedDate],
+			[LastUpdated])
 		VALUES
-			(@Id, @LongUrl, @ShortUrlCode);
+			(@Id,
+			@LongUrl,
+			@ShortUrlCode,
+			1,
+			@ExpiryDate,
+			SYSDATETIMEOFFSET(),
+			SYSDATETIMEOFFSET());
 		COMMIT TRANSACTION;
 
 		SELECT 1;

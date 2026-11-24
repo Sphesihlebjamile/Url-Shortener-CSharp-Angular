@@ -1,0 +1,30 @@
+CREATE PROCEDURE [dbo].[EnableShortUrl]
+	@Id BIGINT,
+	@ExpiryDate DATETIMEOFFSET(7)
+AS
+BEGIN
+	SET XACT_ABORT ON;
+	SET NOCOUNT ON;
+
+	BEGIN TRANSACTION
+
+	BEGIN TRY
+		UPDATE [dbo].[Urls]
+		SET [IsActive] = 1,
+			[ExpiryDate] = @ExpiryDate,
+			[LastUpdated] = SYSDATETIMEOFFSET()
+		WHERE [Id] = @Id;
+
+		COMMIT TRANSACTION;
+
+		SELECT 1;
+	END TRY
+	BEGIN CATCH
+		IF @@TRANCOUNT > 0
+		BEGIN
+			ROLLBACK TRANSACTION
+		END
+
+		SELECT -1;
+	END CATCH
+END

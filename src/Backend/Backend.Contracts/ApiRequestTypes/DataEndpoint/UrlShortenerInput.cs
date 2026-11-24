@@ -1,3 +1,3 @@
 ﻿namespace Backend.Contracts.ApiRequestTypes.DataEndpoint;
 
-public record UrlShortenerInput(string LongUrl);
+public record UrlShortenerInput(string LongUrl, DateTimeOffset? ExpiryDate = null);

@@ -24,12 +24,14 @@ public sealed class UrlShortenerPlan :
             throw new ShortUrlGenerationException("Long URL cannot be null or empty", 422);
         }
 
-        // Validate that the longUrl does not exist in the database
-        var shortUrlCode = await _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(request.LongUrl, CancellationToken.None);
+        // Check for and return a database entry
+        var urlEntry = await _urlShortenerDb.GetShortUrlCodeByLongUrlAsync(request.LongUrl, CancellationToken.None);
 
-        if(!string.IsNullOrWhiteSpace(shortUrlCode))
+        if(urlEntry != null)
         {
-            return new UrlShortenerOutput($"{_shortenerSettings.ApiApplicationUrl}/{shortUrlCode}");
+            await HandleUrlExpiry(urlEntry, request.ExpiryDate, default);
+
+            return new UrlShortenerOutput($"{_shortenerSettings.ApiApplicationUrl}/{urlEntry.ShortUrl}");
         }
 
         // If it doesn't exist, get a globally unique Id
@@ -40,7 +42,7 @@ public sealed class UrlShortenerPlan :
         var shortCode = _base62Converter.Execute(newUniqueId);
 
         // Save to database
-        var dbResult = await _urlShortenerDb.InsertNewUrlAsync(newUniqueId, request.LongUrl, shortCode, CancellationToken.None);
+        var dbResult = await _urlShortenerDb.InsertNewUrlAsync(newUniqueId, request.LongUrl, shortCode, request.ExpiryDate, CancellationToken.None);
 
         if (!dbResult)
         {
@@ -50,5 +52,30 @@ public sealed class UrlShortenerPlan :
         // Return
         var output = new UrlShortenerOutput($"{_shortenerSettings.ApiApplicationUrl}/{shortCode}");
         return output;
+    }
+
+    /// <summary>
+    /// This function manages expired short url codes that are attempted to be created again from a provided
+    /// long url. If the short url code already exists and it is expired, then the function will mark
+    /// the function as active and provide a new <c>Expiry Date</c>. If it is not expired then nothing will
+    /// happen.
+    /// </summary>
+    /// <param name="urlEntry">The URL entry to inspect.</param>
+    /// <param name="newExpiryDate">The new expiry date.</param>
+    /// <returns></returns>
+    private async Task HandleUrlExpiry(Url urlEntry, DateTimeOffset? newExpiryDate, CancellationToken cancellationToken)
+    {
+        if (urlEntry.ExpiryDate == null)
+        {
+            return;
+        }
+
+        // Url does exist, validate that is hasn't expired
+        var hasExpired = urlEntry.ExpiryDate.Value.ToUniversalTime() <= DateTimeOffset.UtcNow || urlEntry.IsActive == false;
+
+        if (hasExpired)
+        {
+            await _urlShortenerDb.EnableShortUrl(urlEntry.Id, newExpiryDate, cancellationToken);
+        }
     }
 }

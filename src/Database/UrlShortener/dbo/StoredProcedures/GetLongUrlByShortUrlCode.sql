@@ -6,7 +6,7 @@ BEGIN
 
 	-- Returns a LongUrl for the provided short url
 	SELECT
-		TOP(1) [LongUrl]
+		TOP(1) *
 	FROM [dbo].[Urls]
-	WHERE [ShortUrlCode] = @ShortUrl
+	WHERE [ShortUrlCode] = @ShortUrl AND [IsActive] = 1;
 END
