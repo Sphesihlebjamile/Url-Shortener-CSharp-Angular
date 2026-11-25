@@ -13,6 +13,8 @@ export class LongUrlInput {
   private readonly urlShortenerApi = inject(UrlShortenerApi);
 
   private longUrl: string = '';
+  private expiryDate: string = '';
+  private expiryDateEnabled = false;
   readonly longUrlErrors = signal<string[]>([]);
   readonly isGenerating = signal(false);
 
@@ -31,6 +33,7 @@ export class LongUrlInput {
 
     this.urlShortenerApi.shortenUrl(
       this.longUrl,
+      this.expiryDateEnabled ? this.getExpiryDateWithTimezone() : null,
       (response) => {
         this.shortUrl.emit(response.shortUrl);
         this.isGenerating.set(false);
@@ -57,8 +60,31 @@ export class LongUrlInput {
     if (this.longUrl && !this.isValidHttpUrl(this.longUrl.trim())) {
       errors = [...errors, "Enter a valid URL starting with http:// or https://"]
     }
+    if (this.expiryDateEnabled && !this.expiryDate) {
+      errors = [...errors, 'Expiry date and time is required'];
+    } else if (this.expiryDateEnabled) {
+      const expiryTime = new Date(this.expiryDate).getTime();
+      if (!Number.isFinite(expiryTime) || expiryTime <= Date.now()) {
+        errors = [...errors, 'Enter a valid expiry date and time in the future'];
+      }
+    }
     this.longUrlErrors.set(errors);
     return errors.length === 0;
+  }
+
+  private getExpiryDateWithTimezone(): string {
+    const date = new Date(this.expiryDate);
+    const offsetMinutes = -date.getTimezoneOffset();
+    const offsetSign = offsetMinutes >= 0 ? '+' : '-';
+    const absoluteOffsetMinutes = Math.abs(offsetMinutes);
+    const offsetHours = String(Math.floor(absoluteOffsetMinutes / 60)).padStart(2, '0');
+    const offsetRemainderMinutes = String(absoluteOffsetMinutes % 60).padStart(2, '0');
+    const localDateTime = [
+      `${date.getFullYear().toString().padStart(4, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
+      `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`,
+    ].join('T');
+
+    return `${localDateTime}${offsetSign}${offsetHours}:${offsetRemainderMinutes}`;
   }
 
   private isValidHttpUrl(value: string): boolean {
