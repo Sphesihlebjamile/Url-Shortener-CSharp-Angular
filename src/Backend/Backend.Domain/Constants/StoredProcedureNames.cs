@@ -8,4 +8,5 @@ public static class StoredProcedureNames
     public const string GETLONGURLBYSHORTURLCODE = "[dbo].[GetLongUrlByShortUrlCode]";
     public const string ENABLESHORTURL = "[dbo].[EnableShortUrl]";
     public const string DISABLESHORTURL = "[dbo].[DisableShortUrl]";
+    public const string BULKSEARCHSHORTURLCODEBYLONGURLS = "[dbo].[BulkSearchShortUrlCodeByLongUrls]";
 }
