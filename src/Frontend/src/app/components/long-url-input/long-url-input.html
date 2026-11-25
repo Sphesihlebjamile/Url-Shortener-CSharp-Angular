@@ -8,6 +8,20 @@
         placeholder="Long Url"
         [(ngModel)]="longUrl"
     />
+    <label class="w-full mt-2 flex items-center gap-2" for="expiryDateEnabled">
+        <input id="expiryDateEnabled" type="checkbox" [(ngModel)]="expiryDateEnabled" />
+        Set expiry date
+    </label>
+    @if (expiryDateEnabled) {
+        <label class="w-full mt-2" for="expiryDate">Expiry date and time</label>
+        <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 m-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="expiryDate"
+            type="datetime-local"
+            required
+            [(ngModel)]="expiryDate"
+        />
+    }
     <div class="w-full flex flex-col ml-6 text-red-400 items-start font-bold">
         @for (longUrlError of longUrlErrors(); track $index) {
             <small class="py-1">- {{ longUrlError }}</small>

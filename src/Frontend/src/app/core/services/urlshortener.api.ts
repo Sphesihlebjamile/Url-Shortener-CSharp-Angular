@@ -14,10 +14,11 @@ export class UrlShortenerApi {
 
   shortenUrl(
     longUrl: string,
+    expiryDate: string | null,
     onSuccess: (response: ShortenUrlResponse) => void,
     onError: (error: HttpErrorResponse) => void,
   ): void {
-    this.http.post<ShortenUrlResponse>(this.shortenUrlApiUrl, { longUrl }).subscribe({
+    this.http.post<ShortenUrlResponse>(this.shortenUrlApiUrl, { longUrl, expiryDate }).subscribe({
       next: onSuccess,
       error: onError,
     });
