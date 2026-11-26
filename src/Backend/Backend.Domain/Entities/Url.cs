@@ -14,6 +14,10 @@ public class Url
     /// </summary>
     public required string ShortUrl { get; set; }
     /// <summary>
+    /// The alias associated with the shortened URL.
+    /// </summary>
+    public string? Alias { get; set; }
+    /// <summary>
     /// The original long version of the URL.
     /// </summary>
     public required string LongUrl { get; set; }

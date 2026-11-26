@@ -2,6 +2,7 @@ CREATE PROCEDURE [dbo].[InsertNewUrlIntoUrls]
 	@Id [BIGINT],
 	@LongUrl [NVARCHAR](MAX),
 	@ShortUrlCode [NVARCHAR](7),
+	@Alias [VARCHAR](100),
 	@ExpiryDate DATETIMEOFFSET(7)
 AS
 BEGIN
@@ -15,6 +16,7 @@ BEGIN
 			([Id],
 			[LongUrl],
 			[ShortUrlCode],
+			[Alias],
 			[IsActive],
 			[ExpiryDate],
 			[CreatedDate],
@@ -23,6 +25,7 @@ BEGIN
 			(@Id,
 			@LongUrl,
 			@ShortUrlCode,
+			@Alias,
 			1,
 			@ExpiryDate,
 			SYSDATETIMEOFFSET(),

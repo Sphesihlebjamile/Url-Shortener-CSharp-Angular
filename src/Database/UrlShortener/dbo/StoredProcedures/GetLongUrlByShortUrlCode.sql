@@ -8,5 +8,6 @@ BEGIN
 	SELECT
 		TOP(1) *
 	FROM [dbo].[Urls]
-	WHERE [ShortUrlCode] = @ShortUrl AND [IsActive] = 1;
+	WHERE ([ShortUrlCode] = @ShortUrl OR [Alias] = @ShortUrl) 
+		AND [IsActive] = 1;
 END
